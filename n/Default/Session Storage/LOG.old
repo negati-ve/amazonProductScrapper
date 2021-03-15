@@ -1,6 +1,3 @@
-2021/03/15-10:04:10.800 1440b Reusing MANIFEST /Users/zed/Lab/experiments/amazonPuppet/n/Default/Session Storage/MANIFEST-000001
-2021/03/15-10:04:10.800 1440b Recovering log #4
-2021/03/15-10:04:10.804 1440b Reusing old log /Users/zed/Lab/experiments/amazonPuppet/n/Default/Session Storage/000004.log 
-2021/03/15-10:04:21.902 277a3 Level-0 table #7: started
-2021/03/15-10:04:21.931 277a3 Level-0 table #7: 28874 bytes OK
-2021/03/15-10:04:21.985 277a3 Delete type=0 #4
+2021/03/15-11:58:18.368 10d03 Reusing MANIFEST /Users/zed/Lab/experiments/amazonPuppet/n/Default/Session Storage/MANIFEST-000001
+2021/03/15-11:58:18.394 10d03 Recovering log #6
+2021/03/15-11:58:18.419 10d03 Reusing old log /Users/zed/Lab/experiments/amazonPuppet/n/Default/Session Storage/000006.log 

@@ -14,14 +14,15 @@ let newCSV = [];
 
     const csvData = await csvToJson().fromFile(csvInputFilePath);
     let ASINS = csvData.map(val => val.ASIN)
-    const browser = await puppeteer.launch({ headless: true, userDataDir: './n' });
-    const page = await browser.newPage();
-    await page.setViewport({
-        width: 1200,
-        height: 800
-    });
+
     const get = async (ASIN) => {
         try {
+            let browser = await puppeteer.launch({ headless: false });
+            // const page = await browser.newPage();
+            // await page.setViewport({
+            //     width: 1200,
+            //     height: 800
+            // });
             let url = `https://www.amazon.in/dp/${ASIN}/`
             let lowestPrice = 99999999999;
             let newCSVRow = {
@@ -81,6 +82,7 @@ let newCSV = [];
             // await page.waitFor(1000)
             newCSV.push(newCSVRow)
             await page.close()
+            await browser.close();
             return 1
         } catch (e) {
             console.log(e)
