@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
 var bluebird = require("bluebird");
 var log = require('loglevel');
 log.setLevel('info');
-
+var start = new Date()
 // return 1;
 let newCSV = [];
 (async () => {
@@ -16,8 +16,8 @@ let newCSV = [];
     let ASINS = csvData.map(val => val.ASIN)
 
     const get = async (ASIN) => {
+        let browser = await puppeteer.launch({ headless: false });
         try {
-            let browser = await puppeteer.launch({ headless: false });
             // const page = await browser.newPage();
             // await page.setViewport({
             //     width: 1200,
@@ -45,10 +45,10 @@ let newCSV = [];
             }
             let seller_count = 0;
             const page = await browser.newPage();
-            await page.setViewport({
-                width: 1200,
-                height: 800
-            });
+            // await page.setViewport({
+            //     width: 1200,
+            //     height: 800
+            // });
             console.log('EXTRACTING ', url)
             let x = await page.goto(url)
             viewProfileButtonSelector = '#olp_feature_div > div:nth-child(4) > span:nth-child(1) > a:nth-child(1) > span:nth-child(1)'
@@ -85,14 +85,18 @@ let newCSV = [];
             await browser.close();
             return 1
         } catch (e) {
+            // await page.close()
+            await browser.close();
             console.log(e)
         }
     }
     await bluebird.map(ASINS, async (asin) => {
         await get(asin)
-    }, { concurrency: 5 });
+    }, { concurrency: 2 });
     const csv = new ObjectsToCsv(newCSV)
     await csv.toDisk('./output.csv')
     console.log("Finish")
+    var end = new Date() - start
+    console.info('Execution time: %dms', end)
 })()
 
