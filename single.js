@@ -9,7 +9,14 @@ var count = 0;
 // return 1;
 var skip = 0;
 let newCSV = [];
+// var Xvfb = require('xvfb');
+// var xvfb = new Xvfb();
+// xvfb.startSync();
 
+// // code that uses the virtual frame buffer here
+
+// xvfb.stopSync();
+// the Xvfb is stopped
 (async () => {
 
     const csvInputFilePath = './input.csv'
@@ -65,16 +72,16 @@ let newCSV = [];
                 width: 1080,
                 height: 1080
             });
-            await page.setRequestInterception(true);
+            // await page.setRequestInterception(true);
 
-            page.on('request', (req) => {
-                if (req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image') {
-                    req.abort();
-                }
-                else {
-                    req.continue();
-                }
-            });
+            // page.on('request', (req) => {
+            //     if (req.resourceType() == 'font' || req.resourceType() == 'image') {
+            //         req.abort();
+            //     }
+            //     else {
+            //         req.continue();
+            //     }
+            // }); 
 
             // console.log()
             // console.log(count, 'EXTRACTING ', url)
@@ -85,8 +92,8 @@ let newCSV = [];
             // await button.click()
             // console.log(x)
             let buybox = await amazonFunctions.findPinnedAOD(page)
-            let offers = await amazonFunctions.findAODOfferList(page)
-            // console.log(buybox)
+            let offers = await amazonFunctions.findAODOfferListDirect(page)
+            console.log(offers)
             newCSVRow.ASIN = ASIN
             newCSVRow.url = productUrl
 
@@ -109,10 +116,10 @@ let newCSV = [];
             })
             await page.waitFor(1000)
             newCSV.push(newCSVRow)
-            let csv = new ObjectsToCsv([newCSVRow])
+            const csv = new ObjectsToCsv(newCSV)
             await csv.toDisk('./output.csv', { append: true })
             let end = new Date() - start
-            console.log(currentCount, 'EXTRACTED ', ASIN)
+            console.log(currentCount, 'EXTRACTED ', url, newCSVRow)
             console.info('Execution time: %dms', end)
             await page.close()
             await browser.close();
@@ -120,27 +127,11 @@ let newCSV = [];
         } catch (e) {
             // await page.close()
             // await browser.close();
-            console.log('FAILED', currentCount, ASIN)
+            console.log('FAILED', currentCount)
             console.log(e)
         }
     }
-    await bluebird.map(ASINS, async (asin) => {
-        count = count + 1;
-        if (count < skip) {
-            return;
-        }
-        await get(asin, count)
-    }, { concurrency: 50 });
-    // process.on('SIGINT', async () => {
-    //     console.log("Caught interrupt signal");
-    //     const csv = new ObjectsToCsv(newCSV)
-    //     await csv.toDisk('./output.csv')
-    //     console.log("Finish")
-    //     if (i_should_exit)
-    //         process.exit();
-    // });
-
-    console.log("Finish")
+    get('B08TVZVH5G', 1)
 
 })()
 
